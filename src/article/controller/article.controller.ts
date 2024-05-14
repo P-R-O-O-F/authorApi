@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable prettier/prettier */
 import {
   Body,
   Controller,
@@ -8,7 +10,12 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { ArticleService } from '../service/article.service';
+import { DeleteArticleService } from '../use-case/delete-article.service';
+import { CreateArticleService } from '../use-case/create-article.service';
+import { UpdateArticleService } from '../use-case/update-article.service';
+import { GetAllArticleService } from '../use-case/get-all-article.service';
+import { GetArticleByIdService } from '../use-case/get-article-ById.service';
+import { GetArticleByAuthorService } from '../use-case/get-articles-ByAuthor.service';
 import { ArticleCreateDto } from '../dto/article-create.dto';
 import { ArticleUpdateDto } from '../dto/article-update.dto';
 
@@ -20,13 +27,13 @@ export class ArticleController {
   // injection de dépendance
   // permet d'instancier la classe ArticleService
   // dans la propriété articleService
-  constructor(private readonly articleService: ArticleService) {}
+  constructor(private readonly DeleteArticleService: DeleteArticleService,private readonly CreateArticleService: CreateArticleService,private readonly UpdateArticleService: UpdateArticleService, private readonly GetAllArticleService: GetAllArticleService,private readonly GetArticleByIdService: GetArticleByIdService,private readonly GetArticleByAuthorService: GetArticleByAuthorService) {}
 
   // @Get() est un décorateur qui permet de déclarer
   // une route accessible avec la méthode GET
   @Get()
   getAllArticles() {
-    return this.articleService.getAllarticles();
+    return this.GetAllArticleService.getAllarticles();
   }
 
   // on peut passer en parametre du décorateur
@@ -34,7 +41,7 @@ export class ArticleController {
   // on peut ensuite récupérer sa valeur avec le décorateur @Param
   @Get(':id')
   getOneArticleById(@Param('id', ParseIntPipe) id: number) {
-    return this.articleService.getOneArticleById(id);
+    return this.GetArticleByIdService.getOneArticleById(id);
   }
   // on peut passer en parametre du décorateur
   // un segment d'url avec éventuellement des paramètres
@@ -49,7 +56,7 @@ export class ArticleController {
     L'ORM convertit ensuite les résultats de la requête SQL en objets Article, qui sont renvoyés par la méthode 
     `getArticlesByAuthor` du service. Ces objets Article sont ensuite renvoyés par la méthode `getArticlesByAuthor` 
     du contrôleur en réponse à la requête HTTP initiale.*/
-    return this.articleService.getArticlesByAuthor(author);
+    return this.GetArticleByAuthorService.getArticlesByAuthor(author);
   }
 
   @Post()
@@ -59,7 +66,7 @@ export class ArticleController {
   // avec un DTO (Data Transfer Object)
   createArticle(@Body() data: ArticleCreateDto) {
     console.log(data);
-    return this.articleService.createArticle(data);
+    return this.CreateArticleService.createArticle(data);
   }
 
   @Put(':id')
@@ -67,11 +74,11 @@ export class ArticleController {
     @Param('id', ParseIntPipe) id: number,
     @Body() data: ArticleUpdateDto,
   ) {
-    return this.articleService.updateArticle(id, data);
+    return this.UpdateArticleService.updateArticle(id, data);
   }
 
   @Delete(':id')
   deleteArticle(@Param('id', ParseIntPipe) id: number) {
-    return this.articleService.deleteArticle(id);
+    return this.DeleteArticleService.deleteArticle(id);
   }
 }
