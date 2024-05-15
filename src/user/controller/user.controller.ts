@@ -16,6 +16,7 @@ import { GetOneUserByIdService } from '../use-case/get-one-user-by-id.service';
 import { GetAllUserByCityService } from '../use-case/get-all-user-by-city.service';
 import { UpdateOneUserService } from '../use-case/update-one-user.service';
 import { UpdateUserPasswordService } from '../use-case/update-user-password.service';
+import { UpdateUserPasswordDto } from '../dto/user-update.dto';
 
 
   
@@ -68,7 +69,7 @@ import { UpdateUserPasswordService } from '../use-case/update-user-password.serv
     }
 
     @Put('/:id/password')
-    updateUserPassword(@Param('id', ParseIntPipe) id: number, @Body() data: UserCreateDto) {
+    updateUserPassword(@Param('id', ParseIntPipe) id: number, @Body() data: UpdateUserPasswordDto) {
       return this.updateUserPasswordService.updateUserPassword(id, data);
     }
 
