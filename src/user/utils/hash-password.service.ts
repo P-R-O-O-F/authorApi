@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import * as bcrypt from 'bcrypt';
-import { PasswordHasherServiceInterface } from './PasswordHasherServiceInterface';
+//import { PasswordHasherServiceInterface } from './PasswordHasherServiceInterface';
 
-export class PasswordHasherService implements PasswordHasherServiceInterface{
+export class PasswordHasherService /*implements PasswordHasherServiceInterface*/{
   private saltOrRounds: number;
 
   constructor(saltOrRounds = 10) {

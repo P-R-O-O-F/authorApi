@@ -18,4 +18,8 @@ export class UserCreateDto {
     message: 'Le password doit contenir au moins 10 caractères',
   })
   password: string;
+    @MinLength(3, {
+        message: 'La ville doit contenir au moins 3 caractères',
+    })
+    city: string;
 }
