@@ -14,6 +14,7 @@ import {
 OrderCreateDto } from '../dto/create-order.dto';
 import { CreateOrderService } from '../use-case/create-order.service';
 import { PayOrderService } from '../use-case/pay-order.service';
+import { SetAdressOrderService } from '../use-case/set-adress-order.service';
 import { Order } from '../entity/order.entity';
 import { Repository } from 'typeorm';
 
@@ -27,7 +28,8 @@ import { Repository } from 'typeorm';
     // permet d'instancier la classe ArticleService
     // dans la propriété articleService
     constructor(private readonly CreateOrderService: CreateOrderService,
-                private readonly PayorderService: PayOrderService
+                private readonly PayorderService: PayOrderService,
+                private readonly SetAdressOrderService: SetAdressOrderService
     ) {}
   
     
@@ -43,4 +45,8 @@ import { Repository } from 'typeorm';
         return this.PayorderService.payOrder(id);
     }
 
+    @Patch('/adress/:id')
+    adressSet(@Param('id', ParseIntPipe) id: number, @Body() data) {
+        return this.SetAdressOrderService.adressSet(id, data);
+    }
 }
