@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-export class UpdateUserPasswordDto {
+export class UpdateUserDto {
   firstName: string;
   lastName: string;
   age: string;

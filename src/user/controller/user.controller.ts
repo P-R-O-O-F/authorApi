@@ -16,8 +16,7 @@ import { GetOneUserByIdService } from '../use-case/get-one-user-by-id.service';
 import { GetAllUserByCityService } from '../use-case/get-all-user-by-city.service';
 import { UpdateOneUserService } from '../use-case/update-one-user.service';
 import { UpdateUserPasswordService } from '../use-case/update-user-password.service';
-import { UpdateUserPasswordDto } from '../dto/user-update.dto';
-
+import { UpdateUserPasswordDto } from '../dto/user-password-update.dto';
 
   
   // @Controller('articles')
