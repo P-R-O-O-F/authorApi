@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { ArrayMaxSize, ArrayMinSize, IsNumber, MinLength, isNumber } from 'class-validator';
+import { ArrayMaxSize, ArrayMinSize, IsDate, IsNumber, MinLength, isNumber } from 'class-validator';
 
 export class OrderCreateDto {
 
@@ -7,15 +7,17 @@ export class OrderCreateDto {
 
   updatedAt: Date;
 
+  paidAt: Date;
+
   @MinLength(3, {
     message: 'Le customer doit contenir au moins 3 caractères',
   })
-  customer: string;*/
-
+  customer: string;
+*/
   @ArrayMaxSize(3, { message: 'Trop d\'items' })
   item: string[];
-
-  /*@MinLength(10, {
+/*
+  @MinLength(10, {
     message: 'Le statut doit contenir au moins 2 caractères',
   })
   status: string;

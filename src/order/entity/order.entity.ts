@@ -16,16 +16,25 @@ export class Order {
             this.updatedAt = new Date(),
             this.customer = 'test',
             this.status = 'Cart',
+            this.paidAt = null,
             this.total = orderCreateData.item.length * 10
         }     
     }
 
+    paid(){
+        this.status = 'Paid';
+        this.updatedAt = new Date();
+        this.paidAt = new Date();
+    }
 
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({ type: 'date' })
     createdAt: Date;
+
+    @Column({ type: 'date' , nullable: true})
+    paidAt: Date;
 
     @Column({ type: 'date' })
     updatedAt: Date;
