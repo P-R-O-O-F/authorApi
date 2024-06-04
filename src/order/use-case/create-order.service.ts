@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {OrderCreateDto} from '../dto/create-order.dto';
 import {Order} from '../entity/order.entity';
 import { Repository } from 'typeorm';
+import { OrderItemCreateDto } from '../dto/create-order-item.dto';
 
 export class CreateOrderService {
 
@@ -13,7 +14,7 @@ export class CreateOrderService {
       
     async createOrder(data: OrderCreateDto): Promise<Order> {
         try {
-            if(data.item.length > 3) {
+            if (data.item.length > 3) {
                 throw new Error("trop d'items");
             }
             const order = new Order(data);
@@ -21,7 +22,7 @@ export class CreateOrderService {
             return order;
         } catch (error) {
             console.log(error);
-            throw new Error('Error while creating order');
+            throw new Error(`Error while creating order: ${error.message}`);
         }
     }
 }

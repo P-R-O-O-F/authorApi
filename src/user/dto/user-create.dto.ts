@@ -2,12 +2,18 @@
 import { MinLength } from 'class-validator';
 
 export class UserCreateDto {
+
   @MinLength(3, {
     message: 'L username doit contenir au moins 3 caractères',
   })
+  username ?: string;
+
+  @MinLength(3, {
+    message: 'L firstname doit contenir au moins 3 caractères',
+  })
   firstName: string;
   @MinLength(3, {
-    message: 'L username doit contenir au moins 3 caractères',
+    message: 'L lastname doit contenir au moins 3 caractères',
   })
   lastName: string;
   @MinLength(1, {

@@ -6,6 +6,9 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ type: 'text' , nullable: true})
+  username: string;
+
   @Column({ type: 'text' })
   firstName: string;
 
