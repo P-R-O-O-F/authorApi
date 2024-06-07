@@ -24,11 +24,21 @@ export class OrderItem {
     @Column({ type: 'float' })
     quantity: number;
 
+    @Column({ type: 'varchar' , nullable: true})
+    description: string;
+
+    @Column({ type: 'varchar' , nullable: true})
+    image: string;
+
+    @Column({ type: 'varchar' , nullable: true})
+    color: string;
+
     @Column({ type: 'float' })
     price: number;
 
     @ManyToOne(() => Order, (order) => order.item)
     order: Order
+
 
     public incrementQuantity() {
         this.quantity += 1;

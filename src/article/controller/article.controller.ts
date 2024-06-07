@@ -7,6 +7,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Put,
 } from '@nestjs/common';
@@ -77,7 +78,7 @@ export class ArticleController {
     return this.UpdateArticleService.updateArticle(id, data);
   }
 
-  @Delete(':id')
+  @Patch(':id')
   deleteArticle(@Param('id', ParseIntPipe) id: number) {
     return this.DeleteArticleService.deleteArticle(id);
   }
