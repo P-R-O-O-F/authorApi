@@ -3,6 +3,9 @@ import { ArrayMaxSize, ArrayMinSize, IsDate, IsNumber, MinLength, isNumber } fro
 
 export class OrderCreateDto {
 
-  @ArrayMaxSize(3, { message: 'Trop d\'items' })
-  item: string[];
+  @IsNumber()
+  productId: number;
+
+  @IsNumber()
+  quantity: number;
 }

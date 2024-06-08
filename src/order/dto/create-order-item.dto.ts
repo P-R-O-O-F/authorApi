@@ -14,22 +14,11 @@ import { ManyToOne } from 'typeorm';
 import { Order } from '../entity/order.entity';
 
 export class OrderItemCreateDto {
-  @MinLength(1, { message: 'product vide' })
-  product: string;
-
+  
   @IsNumber()
   quantity: number;
 
   @IsNumber()
-  price: number;
-
-  @MinLength(1, { message: 'couleur vide' })
-  color: string;
-
-  @MinLength(1, { message: 'image vide' })
-  image: string;
-
-  @MinLength(1, { message: 'description vide' })
-  description: string;
+  productId: number;
   
 }

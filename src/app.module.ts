@@ -22,6 +22,7 @@ import { ProductModule } from './product/product.module';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
       autoLoadEntities: true,
+      dropSchema: false,
     }),
     ArticleModule,
     UserModule,

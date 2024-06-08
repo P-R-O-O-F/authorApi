@@ -1,21 +1,22 @@
 /* eslint-disable prettier/prettier */
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Order } from 'src/order/entity/order.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'text' , nullable: true})
+  @Column({ type: 'text' , unique: true})
   username: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true})
   firstName: string;
 
-  @Column({ type: 'text'})
+  @Column({ type: 'text', nullable: true})
   lastName: string;
 
-  @Column({ type: 'text'})
+  @Column({ type: 'text', nullable: true})
   age: string;
 
   @Column({ type: 'text'})
@@ -23,4 +24,7 @@ export class User {
 
     @Column({ type: 'text', nullable: true})
     city: string;
+
+    @OneToMany(() => Order, (order) => order.customer, { cascade: true })
+  orders: Order[];
 }

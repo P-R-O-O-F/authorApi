@@ -1,145 +1,114 @@
 /* eslint-disable prettier/prettier */
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { OrderCreateDto } from '../dto/create-order.dto';
 import { SetAdressOrderDto } from '../dto/set-adress-order.dto';
 import { SetInvoiceAdressOrderDto } from '../dto/set-invoice-adress-order.dto';
 import { OrderItem } from './order-item.entity';
+import { User } from 'src/user/entity/user.entity';
 
 @Entity()
 export class Order {
 
-    static CartStatus = {
-        Cart : 'Cart',
-        Verified : 'Verified',
-        Paid : 'Paid',
-        Shipped : 'Shipped',
-        Delivered : 'Delivered',
-        Closed : 'Closed',
-    };
+    static OrderStatus = {
+        InCart: 'In Cart',
+        Shipped: 'Shipped',
+        Paid: 'Paid',
+        Invoiced: 'Invoiced',
+      };
      
 
 
-    constructor(orderCreateData?: OrderCreateDto){
-        if(orderCreateData){
-            if(orderCreateData.item.length > 3) {
-                throw new Error("trop d'items");
-            }
-            this.item = this.createOrderItems(orderCreateData);
-            this.createdAt = new Date();
-            this.updatedAt = new Date();
-            this.customer = 'test';
-            this.status = Order.CartStatus.Cart;
-            this.paidAt = null;
-            this.total = 10 * orderCreateData.item.length;
-        }          
-    }
-
-    private createOrderItems(createOrderData: OrderCreateDto): OrderItem[] {
-        const orderItemsToCreate = [];
-        this.item = [];
-    
-        createOrderData.item.map((product) => {
-          const existingOrderItem = this.getOrderItemWithProduct(product);
-          if (existingOrderItem) {
-            existingOrderItem.incrementQuantity();
-          } else {
-            const newOrderItem = new OrderItem(product);
-            orderItemsToCreate.push(newOrderItem);
-          }
-        });
-    
-        return orderItemsToCreate;
+    constructor(orderCreateDto?: OrderCreateDto) {
+        if (orderCreateDto) {
+          this.createdAt = new Date();
+          this.updatedAt = new Date();
+          //this.customer = customer;
+          this.items = [];
+          //this.createOrderItems(orderCreateDto.items);
+          this.status = Order.OrderStatus.InCart;
+          this.total = 404;
+          this.paidAt = null;
+          this.shippingAddress = null;
+          this.shippingMethod = null;
+          this.invoiceAddress = null;
+          this.shippingMethodSetAt = null;
+          this.invoiceAddressSetAt = null;
+        }
       }
 
-      private getOrderItemWithProduct(product: string): OrderItem {
-        return this.item.find((item) => {
-            console.log(item.product)
-            return item.product === product;
+    public getOrderItemWithProductId(productId: string): OrderItem {
+        return this.items.find((item) => {
+            return item.product.id.toString() === productId;
         });
     }
 
-    paid(){
-        if(this.status === 'Verified'){
-        this.status = Order.CartStatus.Paid;
+    payOrder() {
+        this.status = 'Paid';
         this.updatedAt = new Date();
         this.paidAt = new Date();
-        }
     }
 
-    adressSet(data : SetAdressOrderDto){
-        if(data.shippingAdress === null || data.shippingMethod === null){
-            throw new Error('Shipping address or shipping method is missing');
-        }
-
-        if(this.status === 'Paid'){
-            throw new Error('Order already paid');
-        }
-
-        this.shippingMethod = data.shippingMethod;
-        this.shippingAdress = data.shippingAdress;
-        this.invoiceAdress = data.invoiceAdress;
+      updateShippingAddress(
+        SetAdressOrderDto: SetAdressOrderDto,
+      ) {
+        this.shippingAddress = SetAdressOrderDto.shippingAdress;
+        this.shippingMethod = SetAdressOrderDto.shippingMethod;
         this.shippingMethodSetAt = new Date();
-        this.invoiceAddressSetAt = new Date();
-
-        if (this.invoiceAdress === null && data.invoiceAdress === null){
-            this.invoiceAdress = data.shippingAdress;
+        if (!this.invoiceAddress) {
+          this.invoiceAddress = this.shippingAddress;
+          this.invoiceAddressSetAt = new Date();
         }
-
-        this.status = Order.CartStatus.Verified;
         this.updatedAt = new Date();
-    }
+        this.status = Order.OrderStatus.Shipped;
+      }
 
-    setInvoiceAdress(data : SetInvoiceAdressOrderDto){
-        if(data.invoiceAdress === null){
-            throw new Error('Invoice address is missing');
-        }
-
-        if(this.status === 'Paid'){
-            throw new Error('Order already paid');
-        }
-
-        this.invoiceAdress = data.invoiceAdress;
+    updateInvoiceAddress(
+        SetInvoiceAdressOrderDto: SetInvoiceAdressOrderDto,
+      ) {
+        this.invoiceAddress = SetInvoiceAdressOrderDto.invoiceAdress;
         this.invoiceAddressSetAt = new Date();
-        this.status = Order.CartStatus.Verified;
         this.updatedAt = new Date();
-    }
+        this.status = Order.OrderStatus.Invoiced;
+      }
 
-    @PrimaryGeneratedColumn()
-    id: number;
-
-    @Column({ type: 'date' })
-    createdAt: Date;
-
-    @Column({ type: 'date' , nullable: true})
-    paidAt: Date;
-
-    @Column({ type: 'date' })
-    updatedAt: Date;
-
-    @Column({ type: 'text' })
-    customer: string;
-
-    @Column({ type: 'varchar', nullable: true})
-    shippingAdress: string;
-
-    @Column({ type: 'varchar', nullable: true})
-    shippingMethod: string;
-
-    @Column({ type: 'varchar', nullable: true})
-    invoiceAdress: string;
-
-    @Column({ type: 'date', nullable: true})
-    shippingMethodSetAt: Date;
-
-    @Column({ type: 'date', nullable: true})
-    invoiceAddressSetAt: Date;
-
-    @Column({ type: 'varchar' })
-    status: string;
-
-    @Column({ type: 'float' })
-    total: number;
-
-    @OneToMany(() => OrderItem, (orderItem) => orderItem.order, {cascade : true})
-    item: OrderItem[];
+      @PrimaryGeneratedColumn()
+      id: number;
+    
+      @Column({ type: 'date' })
+      createdAt: Date;
+      updatedAt: Date;
+    
+      @ManyToOne(() => User, (user) => user.orders)
+      @JoinColumn({ name: 'customerId' })
+      customer: User;
+    
+      @OneToMany(() => OrderItem, (orderItem) => orderItem.order, {
+        cascade: true,
+        eager: true,
+      })
+      items: OrderItem[];
+    
+      @Column({ type: 'varchar', default: Order.OrderStatus.InCart })
+      status: string;
+    
+      @Column({ type: 'int' })
+      total: number;
+    
+      @Column({ type: 'date', nullable: true })
+      paidAt: Date;
+    
+      @Column({ type: 'varchar', nullable: true })
+      shippingAddress: string;
+    
+      @Column({ type: 'varchar', nullable: true })
+      shippingMethod: string;
+    
+      @Column({ type: 'varchar', nullable: true })
+      invoiceAddress: string;
+    
+      @Column({ type: 'date', nullable: true })
+      shippingMethodSetAt: Date;
+    
+      @Column({ type: 'date', nullable: true })
+      invoiceAddressSetAt: Date;
 }

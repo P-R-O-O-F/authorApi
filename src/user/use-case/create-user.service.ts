@@ -21,6 +21,7 @@ export class CreateUserService {
         data.password = await this.passwordHasher.hashPassword(data.password);
         return this.userRepository.save(data);
     } catch (error) {
+      console.log(data);
       console.log(error);
       throw new Error('Error while creating user');
     }

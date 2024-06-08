@@ -1,6 +1,7 @@
 import { Min, MinLength } from 'class-validator';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { CreateProductDto } from '../dto/create-product.dto';
+import { OrderItem } from 'src/order/entity/order-item.entity';
 
 @Entity()
 export class Product {
@@ -12,7 +13,16 @@ export class Product {
         this.price = createProductData.price;
         this.image = createProductData.image;
         this.color = createProductData.color; 
+
        }   
+    }
+
+    makeAvailable() {
+        this.isAvailable = true;
+    }
+
+    makeUnavailable() {
+        this.isAvailable = false;
     }
 
     @PrimaryGeneratedColumn()
@@ -35,4 +45,9 @@ export class Product {
 
     @Column({ type: 'boolean', default: true})
     isAvailable: boolean;
+
+    @OneToMany(() => OrderItem, (orderItem) => orderItem.product, {
+        cascade: true,
+      })
+      orderItems: OrderItem[];
 }
